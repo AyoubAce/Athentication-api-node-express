@@ -4,7 +4,10 @@ const {User}= require("../models/models")
 
 //generate Token
 const generateToken= (id)=>{
-    return jwt.sign({id},process.env.JWT_PRIVATE_KEY,{expiresIn:"5d"})
+    return jwt.sign({id},process.env.ACCESS_TOKEN_SECRET,{expiresIn:"20min"})
+}
+const generateRefreshToken= (id)=>{
+    return jwt.sign({id},process.env.REFRESH_TOKEN_SECRET,{expiresIn:"5d"})
 }
 
 const userLogin= async ()=>{
@@ -33,11 +36,12 @@ const newAccount= async(req,res)=>{
             password:hashedPassword,
         })
         if(user){
+            res.cookie("jwt", refreshToken, {httpOnly:true, maxAge: 23*60*60*1000})
             res.status(201).json({
                 _id:user.id,
                 name: user.name,
                 email:user.email,
-                token: generateToken(user._id)
+                token: generateToken(user._id),
             })
         }
 

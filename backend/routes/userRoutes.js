@@ -1,11 +1,18 @@
-const express= require("express")
-const {userLogin, newAccount, updateAccount,deleteAccount}= require("../controllers/userController")
-const router= express.Router()
-const verifyToken= require('../middleware/verifyToken')
+const express = require("express");
+const {
+  userLogin,
+  newAccount,
+  updateAccount,
+  deleteAccount,
+  changePassword,
+} = require("../controllers/userController");
+const router = express.Router();
+const verifyToken = require("../middleware/verifyToken");
 
-router.get("/user",userLogin)
-router.post("/user",newAccount)
-router.put("/user",updateAccount)
-router.delete("/user",deleteAccount)
+router
+  .post("/login", userLogin)
+  .post("/register", newAccount)
+  .put("/user/:id",verifyToken, updateAccount)
+  .delete("/user/:id",verifyToken, deleteAccount);
 
-module.exports= router;
+module.exports = router;

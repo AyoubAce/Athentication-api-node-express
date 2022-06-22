@@ -4,13 +4,14 @@ require('dotenv').config()
 
 const verifyToken= async (req,res,next)=>{
     let token;
-    const authHeader= req.headers['authorization']
+    const authHeader= req.headers.authorization
+    console.log(authHeader);
     try {
         if(authHeader && authHeader.startsWith("Bearer")){
             //"Bearer token"
             token= authHeader.split(' ')[1]
             const decodedToken= jwt.verify(token,process.env.ACCESS_TOKEN_SECRET)
-            req.user= await (await User.findById(decodedToken.id)).select(-password)
+            req.user= await User.findById(decodedToken.id).select("-password")
             next()
         } 
     } catch (error) {
